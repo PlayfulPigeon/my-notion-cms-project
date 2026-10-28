@@ -1,0 +1,23 @@
+# Claude Code (local, per-user settings)
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Node (future Notion CMS site)
+node_modules/
+.next/
+dist/
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log

@@ -1,0 +1,338 @@
+<!doctype html>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Unity Starter Kit</title>
+<style>
+/* Layout: a single reading column with a sticky section bar on top. */
+:root {
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --fg: #1d2129;
+  --muted: #5d6572;
+  --line: #dcdfe5;
+  --accent: #2f6fdb;
+  --accent-soft: #e6eefc;
+  --ok: #1f8a4c;
+  --warn: #b26a00;
+  --code-bg: #eef0f3;
+  --font-body: "Noto Sans KR", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14161b;
+    --surface: #1d2027;
+    --fg: #e7e9ee;
+    --muted: #9aa3b2;
+    --line: #2e333d;
+    --accent: #7fa8ff;
+    --accent-soft: #223050;
+    --ok: #5fd08d;
+    --warn: #f0b35a;
+    --code-bg: #111318;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14161b;
+  --surface: #1d2027;
+  --fg: #e7e9ee;
+  --muted: #9aa3b2;
+  --line: #2e333d;
+  --accent: #7fa8ff;
+  --accent-soft: #223050;
+  --ok: #5fd08d;
+  --warn: #f0b35a;
+  --code-bg: #111318;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--surface);
+}
+
+.wrap { max-width: 880px; margin: 0 auto; }
+
+header.hero { padding-block: 40px 28px; }
+.eyebrow {
+  font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--accent); font-weight: 700; margin: 0 0 8px;
+}
+h1 { font-size: clamp(28px, 6vw, 40px); line-height: 1.2; margin: 0 0 12px; text-wrap: balance; }
+.lead { color: var(--muted); font-size: 16px; margin: 0; max-width: 62ch; }
+
+nav.sections {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--bg);
+  border-block: 1px solid var(--line);
+  padding-block: 10px;
+  overflow-x: auto;
+}
+nav.sections ul {
+  display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; white-space: nowrap;
+}
+nav.sections a {
+  display: inline-block; padding: 6px 12px; border-radius: 999px;
+  color: var(--muted); text-decoration: none; font-size: 14px;
+}
+nav.sections a:hover, nav.sections a:focus-visible { background: var(--accent-soft); color: var(--fg); outline: none; }
+
+section { padding-block: 36px; border-bottom: 1px solid var(--line); }
+section:last-of-type { border-bottom: 0; }
+h2 { font-size: 22px; margin: 0 0 14px; }
+h3 { font-size: 16px; margin: 22px 0 8px; }
+p { margin: 0 0 12px; max-width: 70ch; }
+ul.plain { padding-left: 20px; margin: 0 0 12px; }
+ul.plain li { margin-bottom: 6px; }
+
+.steps { display: grid; gap: 12px; grid-template-columns: 1fr; counter-reset: step; margin: 0; padding: 0; list-style: none; }
+@media (min-width: 640px) { .steps { grid-template-columns: repeat(3, 1fr); } }
+.steps li {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0;
+}
+.steps li b { display: block; margin-bottom: 4px; }
+.steps li span { color: var(--muted); font-size: 14px; }
+
+pre, code { font-family: var(--font-mono); font-size: 13px; }
+code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+pre {
+  background: var(--code-bg); border: 1px solid var(--line); border-radius: 10px;
+  padding: 14px 16px; overflow-x: auto; margin: 0 0 14px; line-height: 1.5;
+}
+pre code { background: none; padding: 0; }
+
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; margin: 0 0 14px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; background: var(--surface); }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 13px; white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td:first-child code { white-space: nowrap; }
+
+.tree { background: var(--code-bg); border-radius: 10px; padding: 14px 16px; font-family: var(--font-mono); font-size: 13px; overflow-x: auto; }
+.tree div { white-space: pre; }
+
+.two { display: grid; gap: 12px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .two { grid-template-columns: 1fr 1fr; } }
+.card {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px; min-width: 0;
+}
+.card h3 { margin-top: 0; }
+.card ul { padding-left: 18px; margin: 0; }
+.card li { margin-bottom: 6px; }
+
+.tag {
+  display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px;
+  border-radius: 999px; margin-right: 6px; vertical-align: 1px;
+}
+.tag.ok { background: color-mix(in srgb, var(--ok) 18%, transparent); color: var(--ok); }
+.tag.todo { background: color-mix(in srgb, var(--warn) 18%, transparent); color: var(--warn); }
+
+.callout {
+  border-left: 3px solid var(--accent); background: var(--accent-soft);
+  padding: 12px 14px; border-radius: 6px; margin: 0 0 14px; max-width: 70ch;
+}
+
+.copy {
+  appearance: none; font: inherit; font-size: 12px; color: var(--muted);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 6px;
+  padding: 4px 10px; cursor: pointer; margin-bottom: 6px;
+}
+.copy:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+footer { color: var(--muted); font-size: 13px; padding-block: 24px 48px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  section { animation: rise .4s ease both; }
+}
+@keyframes rise { from { opacity: .0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Unity 6 · Starter Kit</p>
+    <h1>Unity 프로젝트를 한 번에 세팅하는 스타터 킷</h1>
+    <p class="lead">Unity CLI, Pipeline, Claude Code 연결, Multiplayer Center 기본 설정을 명령 하나로 적용합니다. 새 프로젝트마다 설치 방법을 다시 검색하지 않아도 됩니다.</p>
+  </header>
+
+  <nav class="sections" aria-label="섹션">
+    <ul>
+      <li><a href="#start">빠른 시작</a></li>
+      <li><a href="#options">옵션</a></li>
+      <li><a href="#layout">구성</a></li>
+      <li><a href="#auto">자동 vs 수동</a></li>
+      <li><a href="#multiplayer">Multiplayer</a></li>
+      <li><a href="#verified">검증 상태</a></li>
+      <li><a href="#notes">주의</a></li>
+    </ul>
+  </nav>
+
+  <section id="start">
+    <h2>빠른 시작</h2>
+    <p>아래 세 가지가 이미 설치되어 있다고 가정합니다. Unity Hub와 Unity 6 Editor(6000.x), Git, Claude Code. VS Code도 함께 쓰는 환경을 기준으로 했습니다.</p>
+
+    <h3>1. 사전 점검</h3>
+    <button class="copy" data-copy="powershell -ExecutionPolicy Bypass -File .\scripts\new-project.ps1 -CheckOnly">복사</button>
+    <pre><code>powershell -ExecutionPolicy Bypass -File .\scripts\new-project.ps1 -CheckOnly</code></pre>
+
+    <h3>2. 프로젝트 생성</h3>
+    <p>생성 전에 Unity 계정 로그인 상태를 확인하고, 로그인되어 있지 않으면 브라우저 로그인을 엽니다. 3D와 2D 중 하나를 고릅니다.</p>
+    <button class="copy" data-copy="powershell -ExecutionPolicy Bypass -File .\scripts\new-project-3d.ps1 -Name MyGame -Path C:\UnityProjects -Open">복사</button>
+    <pre><code>powershell -ExecutionPolicy Bypass -File .\scripts\new-project-3d.ps1 -Name MyGame -Path C:\UnityProjects -Open</code></pre>
+    <button class="copy" data-copy="powershell -ExecutionPolicy Bypass -File .\scripts\new-project-2d.ps1 -Name MyGame2D -Path C:\UnityProjects -Open">복사</button>
+    <pre><code>powershell -ExecutionPolicy Bypass -File .\scripts\new-project-2d.ps1 -Name MyGame2D -Path C:\UnityProjects -Open</code></pre>
+
+    <h3>3. Multiplayer Center 설정</h3>
+    <p>생성할 때 services와 netcode 패키지 버전을 기록하고 헤드리스로 URP 머티리얼을 업그레이드합니다. 첫 Editor 실행 때 Multiplayer Center 패키지를 설치하고 창을 엽니다. 게임 종류를 고르면 추천 패키지가 설치됩니다.</p>
+
+    <ul class="steps" style="margin-top:14px">
+      <li><b>사전 점검</b><span>Unity 6 Editor, Unity CLI, git, claude 확인, Unity 로그인 상태</span></li>
+      <li><b>프로젝트 생성</b><span>2D(Universal 2D) 또는 3D(Universal 3D) 템플릿, Git 초기 커밋, Pipeline, Claude Code 연결</span></li>
+      <li><b>멀티플레이어</b><span>services와 netcode 버전 기록과 헤드리스 URP 준비, 첫 실행 때 Multiplayer Center 설치와 창 열기</span></li>
+    </ul>
+  </section>
+
+  <section id="options">
+    <h2>옵션</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>옵션</th><th>기본값</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><code>-Name</code></td><td>필수</td><td>프로젝트 폴더 이름</td></tr>
+          <tr><td><code>-Path</code></td><td>필수</td><td>상위 폴더. 짧은 경로를 권장합니다.</td></tr>
+          <tr><td><code>-Editor</code></td><td>설치된 6000.x 중 최신</td><td>예: <code>6000.3.10f1</code></td></tr>
+          <tr><td><code>-Template</code></td><td><code>com.unity.template.urp-blank</code></td><td>new-project.ps1 전용. 3D 래퍼는 <code>urp-blank</code>, 2D 래퍼는 <code>universal-2d</code>를 씁니다. 다른 템플릿 예: <code>com.unity.template.3d</code></td></tr>
+          <tr><td><code>-SkipGit</code></td><td>off</td><td>Git 초기화를 건너뜁니다.</td></tr>
+          <tr><td><code>-Lfs</code></td><td>off</td><td>psd, fbx, wav, png 등 큰 바이너리를 Git LFS로 추적합니다.</td></tr>
+          <tr><td><code>-SkipMultiplayer</code></td><td>off</td><td>멀티플레이어 설치 스크립트 복사와 헤드리스 준비를 건너뜁니다.</td></tr>
+          <tr><td><code>-SkipLogin</code></td><td>off</td><td>생성 전 Unity 로그인 확인을 건너뜁니다.</td></tr>
+          <tr><td><code>-Open</code></td><td>off</td><td>끝나면 Unity Editor를 엽니다.</td></tr>
+          <tr><td><code>-CheckOnly</code></td><td>off</td><td>사전 점검과 로그인 상태만 확인하고 끝냅니다.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="layout">
+    <h2>구성</h2>
+    <div class="tree"><div>claude-unity-starterkit/
+├── README.md
+├── scripts/
+│   ├── new-project.ps1                 전체 흐름 (로그인 확인 → 생성 → ... → 헤드리스 준비)
+│   ├── new-project-3d.ps1              3D(Universal 3D) 래퍼
+│   └── new-project-2d.ps1              2D(Universal 2D) 래퍼
+└── template/                           생성되는 프로젝트에 복사되는 파일
+    ├── CLAUDE.md                       Claude Code 작업 지침
+    ├── .claude/settings.json           unity 명령 허용 목록
+    ├── .gitignore                      공식 파일 다운로드 실패 시 대체용
+    └── Assets/Editor/StarterKit/
+        ├── MultiplayerPackageInstaller.cs   Multiplayer Center 설치와 창 열기
+        └── ProjectSetup.cs                  헤드리스로 URP 머티리얼 업그레이드</div></div>
+
+    <h3>스크립트 흐름</h3>
+    <ol class="plain">
+      <li>사전 점검: <code>unity</code>, <code>git</code>, <code>claude</code>, 설치된 Unity 6 Editor</li>
+      <li><code>unity projects create</code>로 프로젝트 생성 (<code>--no-cloud</code>)</li>
+      <li>Git 초기화, 공식 Unity <code>.gitignore</code> 적용, 초기 커밋, <code>Library/</code> 미포함 확인</li>
+      <li><code>unity pipeline install --project-path</code></li>
+      <li>CLAUDE.md, <code>.claude/settings.json</code> 복사, <code>unity skill install claude-code --local</code></li>
+      <li>멀티플레이어 설치 스크립트 복사</li>
+      <li><code>manifest.json</code>에 <code>services.multiplayer</code>, <code>netcode.gameobjects</code>의 호환 버전 기록 (Burst를 끌어오는 패키지)</li>
+      <li><code>unity run &lt;프로젝트&gt; -- -executeMethod ProjectSetup.Run</code>으로 헤드리스 실행해 URP 머티리얼 업그레이드. Editor 창을 열기 전에 끝냅니다.</li>
+    </ol>
+  </section>
+
+  <section id="auto">
+    <h2>자동 vs 수동</h2>
+    <div class="two">
+      <div class="card">
+        <h3>자동으로 되는 것</h3>
+        <ul>
+          <li>Unity 6 프로젝트 생성</li>
+          <li>Git 저장소와 초기 커밋</li>
+          <li>Unity Pipeline 패키지</li>
+          <li>Claude Code 지침, unity-cli 스킬, 권한 설정</li>
+          <li>멀티플레이어 패키지 버전 기록과 URP 머티리얼 업그레이드 (생성 시 헤드리스로 처리)</li>
+          <li>Multiplayer Center 패키지 설치와 창 열기 (첫 Editor 실행 때)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>직접 해야 하는 것</h3>
+        <ul>
+          <li>Multiplayer Center에서 게임 종류 선택</li>
+          <li>Unity Services에 프로젝트 연결 (<code>Project Settings &gt; Services</code>, 메뉴 위치는 버전마다 다를 수 있음)</li>
+          <li>필요하면 로그인과 라이선스 확인 (<code>unity auth status</code>, <code>unity license status</code>)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="multiplayer">
+    <h2>Multiplayer Center</h2>
+    <p>설치되는 패키지는 세 개이며, 각 패키지의 최신 호환 버전을 설치합니다.</p>
+    <ul class="plain">
+      <li><code>com.unity.multiplayer.center</code>: 게임 종류에 맞는 패키지를 추천하고 설치합니다.</li>
+      <li><code>com.unity.services.multiplayer</code>: 세션, 로비, 매치메이킹 API</li>
+      <li><code>com.unity.netcode.gameobjects</code>: 실시간 동기화 (NGO)</li>
+    </ul>
+    <p>Multiplayer Center 창은 <code>Window &gt; Multiplayer &gt; Multiplayer Center</code>에서 확인했습니다. 설치 스크립트는 첫 실행 때 Multiplayer Center를 설치하고 이 창을 엽니다. 다시 설치하려면 <code>Tools &gt; Starter Kit &gt; Install Multiplayer Packages</code>를 실행하세요.</p>
+    <div class="callout">services와 netcode는 생성 시 <code>manifest.json</code>에 버전을 적어 두고 헤드리스 실행으로 미리 설치합니다. 배치 모드는 비동기 설치를 기다리지 못해서 이 방식을 택했습니다. Burst 업데이트가 Editor 창을 연 뒤에 일어나지 않도록 하기 위해서입니다.</div>
+  </section>
+
+  <section id="verified">
+    <h2>검증 상태</h2>
+    <p>Unity 6000.3.10f1, Windows 11에서 전체 스크립트를 한 번 실행해 확인했습니다.</p>
+    <ul class="plain">
+      <li><span class="tag ok">확인됨</span>사전 점검 통과</li>
+      <li><span class="tag ok">확인됨</span>프로젝트 생성, Git 초기 커밋, <code>Library/</code> 미포함</li>
+      <li><span class="tag ok">확인됨</span><code>com.unity.pipeline</code> 설치</li>
+      <li><span class="tag ok">확인됨</span><code>.claude/skills/unity-cli</code> 설치</li>
+      <li><span class="tag ok">확인됨</span>설치 스크립트를 헤드리스 Editor로 컴파일, <code>error CS</code> 없음</li>
+      <li><span class="tag ok">확인됨</span>Editor 실행 중 설치 스크립트로 최신 호환 버전 설치: <code>multiplayer.center</code> 1.0.1, <code>services.multiplayer</code> 2.4.1, <code>netcode.gameobjects</code> 2.13.3</li>
+      <li><span class="tag ok">확인됨</span>전체 스크립트로 새 프로젝트를 만든 뒤 헤드리스 단계 실행: <code>services.multiplayer</code> 2.4.1, <code>netcode.gameobjects</code> 2.13.3이 lock에 기록되고 Burst 1.8.29로 올라감, <code>ProjectSetup.Run</code> 종료 코드 0</li>
+      <li><span class="tag todo">미확인</span>처음 Editor 창을 열 때 "URP material upgrade"와 "Burst Package Update Detected" 창이 뜨지 않는지 (GUI에서 확인하지 못함). 테스트 프로젝트에는 업그레이드할 머티리얼이 없어서 머티리얼 업그레이드 효과도 확인하지 못함</li>
+      <li><span class="tag todo">미확인</span>설치 후 Multiplayer Center 창 자동 열기, Multiplayer Center 선택 흐름과 Services 연결</li>
+      <li><span class="tag todo">미확인</span>공식 <code>Unity.gitignore</code> 다운로드 (네트워크 의존, 실패 시 대체 파일 사용)</li>
+    </ul>
+  </section>
+
+  <section id="notes">
+    <h2>주의</h2>
+    <ul class="plain">
+      <li>긴 경로에서 패키지 DLL 경로 오류가 날 수 있습니다. 테스트 중 보인 오류는 긴 임시 경로 때문으로 보이며, 원인은 확인하지 않았습니다. 짧은 경로에 만드세요.</li>
+      <li>생성 전에 로그인 상태를 확인하고 로그인되어 있지 않으면 브라우저 로그인을 엽니다. 건너뛰려면 <code>-SkipLogin</code>을 붙입니다. 문제가 생기면 <code>unity doctor --format json</code>으로 인증, Editor, 최근 오류를 한 번에 볼 수 있습니다.</li>
+      <li>이 킷의 <code>.gitignore</code>는 대체용입니다. 공식 Unity 템플릿을 우선 사용합니다.</li>
+      <li>이전 버전 킷으로 만든 기존 프로젝트에는 이 변경이 적용되지 않습니다. 해당 프로젝트에 <code>ProjectSetup.cs</code>를 복사한 뒤 <code>unity run &lt;프로젝트 경로&gt; -- -executeMethod ProjectSetup.Run</code>을 실행하면 URP 머티리얼 업그레이드를 미리 처리할 수 있습니다. Burst 확인 창은 한 번 더 뜰 수 있습니다.</li>
+    </ul>
+  </section>
+
+  <footer>Claude Code와 Unity CLI로 만든 스타터 킷 · 2026-10-25 기준</footer>
+</div>
+
+<script>
+// Copy buttons. Falls back to selecting the text when the clipboard is refused.
+document.querySelectorAll('.copy').forEach(function (btn) {
+  btn.addEventListener('click', function () {
+    var text = btn.getAttribute('data-copy');
+    var done = function () { btn.textContent = '복사됨'; setTimeout(function () { btn.textContent = '복사'; }, 1400); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { btn.textContent = '선택해서 복사하세요'; });
+    } else {
+      btn.textContent = '선택해서 복사하세요';
+    }
+  });
+});
+</script>

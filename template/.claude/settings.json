@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unity status:*)",
+      "Bash(unity list:*)",
+      "Bash(unity command:*)",
+      "Bash(unity pipeline list:*)",
+      "Bash(unity editors:*)",
+      "Bash(unity projects info:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git ls-files:*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard-unity-files.ps1\""
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File \"$CLAUDE_PROJECT_DIR/.claude/hooks/unity-status.ps1\""
+          }
+        ]
+      }
+    ]
+  }
+}

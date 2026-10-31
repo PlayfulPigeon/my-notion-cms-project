@@ -1,0 +1,36 @@
+{
+  "tasks": [
+    {
+      "id": "1d7098a6-f776-4c85-94a3-48178c572770",
+      "name": "web 현황 검증 및 데모 코드 정리",
+      "description": "web/ 스캐폴딩 상태를 점검한다. src/app/page.tsx, layout.tsx, globals.css, not-found.tsx에 create-next-app 데모 코드나 기본 에셋 참조가 남았는지 확인하고 있으면 제거한다. 이후 npm run dev 기동, npm run format:check, lint, typecheck, build를 순서대로 실행해 결과를 기록한다.",
+      "notes": "next.config.ts의 turbopack.rules 및 AGENTS.md의 nextjs-agent-rules 블록은 수정 금지.",
+      "status": "completed",
+      "dependencies": [],
+      "createdAt": "2026-10-31T04:49:19.001Z",
+      "updatedAt": "2026-10-31T05:02:16.972Z",
+      "relatedFiles": [
+        {
+          "path": "web/src/app/page.tsx",
+          "type": "TO_MODIFY",
+          "description": "기본 페이지"
+        },
+        {
+          "path": "web/src/app/layout.tsx",
+          "type": "TO_MODIFY",
+          "description": "루트 레이아웃"
+        },
+        {
+          "path": "web/package.json",
+          "type": "REFERENCE",
+          "description": "스크립트 확인"
+        }
+      ],
+      "implementationGuide": "1) web/node_modules/next/dist/docs/ 에서 관련 문서를 먼저 읽는다. 2) 위 4개 파일을 읽고 데모 잔존 여부 판단. 3) 필요 시 최소한의 기본 페이지로 교체(Prettier 규칙: 세미콜론, 큰따옴표). 4) 명령 순서대로 실행, 실패 시 원인 수정.",
+      "verificationCriteria": "npm run dev로 기본 페이지가 열리고, format:check, lint, typecheck, build가 모두 오류 없이 끝난다.",
+      "analysisResult": "Notion CMS 기반 유니티 개발 일지/포트폴리오 사이트의 ROADMAP 1단계(프로젝트 초기 설정)를 완료한다. web/ 스캐폴딩은 대부분 존재하므로 새로 만들지 않고 검증, API 방식 확정, 기록, 사용자 Notion 준비 확인에 집중한다. 모든 npm 명령은 web/에서 실행하고 토큰 값은 출력하지 않는다.",
+      "summary": "web/ 스캐폴딩을 점검한 결과 page.tsx, layout.tsx, globals.css, not-found.tsx에 create-next-app 데모 코드나 기본 에셋 참조가 없어 제거할 것이 없었다. format:check, lint, typecheck, build가 모두 exit 0으로 통과했고 build에서 5개 라우트가 생성됐다. dev 서버(포트 3123)에서 홈이 200과 기본 문구로 응답했고 확인 후 해당 백그라운드 작업만 종료했다. 코드 변경은 없다.",
+      "completedAt": "2026-10-31T05:02:16.970Z"
+    }
+  ]
+}

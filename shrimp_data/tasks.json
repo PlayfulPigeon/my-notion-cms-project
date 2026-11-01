@@ -5,10 +5,10 @@
       "name": "P1-1 Notion 준비 확인 및 API 조회 방식 확정",
       "description": "[Phase 1] (사용자 수동) Notion Integration 생성, 콘텐츠 DB에 Connections 연결, PRD 3장 속성 구성, 샘플 글 3개 입력(Project 2, Devlog 1 이상, Draft 1개 포함). web/.env.local에 NOTION_TOKEN, NOTION_DATABASE_ID가 있는지 값 노출 없이 확인. web/node_modules/@notionhq/client 타입과 공식 문서로 v5의 DB 조회 방식(database vs data source)을 확정하고 package.json에서 @notionhq/client 버전을 고정(^ 제거)한다. 확정한 버전과 방식은 notion.ts 상단 주석에 기록한다.",
       "notes": "추측으로 databases.query를 쓰지 않는다. 사용자 수동 단계가 막히면 보고 후 대기.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [],
       "createdAt": "2026-10-31T05:05:23.714Z",
-      "updatedAt": "2026-10-31T05:05:23.714Z",
+      "updatedAt": "2026-11-01T07:42:45.074Z",
       "relatedFiles": [
         {
           "path": "web/package.json",
@@ -28,21 +28,23 @@
       ],
       "implementationGuide": "1) .env.local 키 존재 여부만 확인(값 출력 금지). 2) node_modules/@notionhq/client/build/src/Client.d.ts에서 dataSources.query 또는 databases.query 존재 확인. 3) 확정된 방식을 notion.ts 상단 주석 초안으로 작성. 4) 토큰/DB ID가 없으면 사용자에게 요청하고 중단.",
       "verificationCriteria": "사용할 @notionhq/client 버전과 조회 방식이 notion.ts 주석에 기록되고, .env.local에 두 변수가 존재하며 git 추적 대상이 아니다.",
-      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과."
+      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과.",
+      "summary": "@notionhq/client 5.28.0 버전을 고정하고 dataSources.query 방식을 notion.ts 주석에 기록했다. .env.local에 두 변수가 있고 git 추적 대상이 아니며, 실제 연결로 data source 1개, 속성 12개, 샘플 4개(Draft 1개 포함)를 확인했다.",
+      "completedAt": "2026-11-01T07:42:45.070Z"
     },
     {
       "id": "6c045064-dc8e-45cf-9dda-9e94167c7534",
       "name": "P1-2 스타터 정리 및 골격 검증",
       "description": "[Phase 1] web/의 create-next-app 데모 코드와 기본 에셋(public 아이콘, 데모 CSS, README 잔여물 등)을 제거하고 src/app, src/components, src/lib 골격을 정리한다. 패키지(@notionhq/client, notion-to-md, react-markdown, server-only) 설치 상태를 점검한다. 루트에는 패키지를 설치하지 않는다.",
       "notes": "next.config.ts의 turbopack.rules와 web/AGENTS.md는 수정 금지.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "4f9e511f-d8d7-4438-a797-4022d8ef4947"
         }
       ],
       "createdAt": "2026-10-31T05:05:23.714Z",
-      "updatedAt": "2026-10-31T05:05:23.714Z",
+      "updatedAt": "2026-11-01T07:45:32.748Z",
       "relatedFiles": [
         {
           "path": "web/src/app/page.tsx",
@@ -62,21 +64,23 @@
       ],
       "implementationGuide": "1) web/src/app/page.tsx, layout.tsx, globals.css, public/를 읽고 데모 요소 식별. 2) 불필요 항목 삭제, globals.css는 Tailwind import만 남김. 3) server-only 미설치 시 web/에서 npm install server-only. 4) npm run format, dev 실행 확인.",
       "verificationCriteria": "npm run dev로 기본 페이지가 열리고, npm run build와 npm run lint가 오류 없이 끝나며, 토큰이 git에 추적되지 않는다.",
-      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과."
+      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과.",
+      "summary": "데모 코드·에셋은 이미 제거된 상태임을 확인하고 README의 create-next-app 잔여물을 프로젝트용으로 교체했다. server-only를 web/에 설치했고(notionhq/client, notion-to-md, react-markdown 설치 확인), 루트에는 설치하지 않았다. format:check, lint, typecheck, build가 모두 통과했다. .env.local은 git 추적 대상이 아니다.",
+      "completedAt": "2026-11-01T07:45:32.745Z"
     },
     {
       "id": "ea776401-ec24-4927-96df-5810db2eb1ed",
       "name": "P2-1 데이터 계층 구현 lib/notion.ts",
       "description": "[Phase 2] web/src/lib/types.ts의 Post 타입(PRD 3.2)을 검증하고 notion.ts를 구현한다. 최상단 import \"server-only\". 클라이언트 초기화(환경변수 없으면 명확한 에러), 속성→Post 매핑(genre/tags 빈 값은 [], 선택 필드는 undefined), getPosts(type?)(Status=Published 필터, Published At 내림차순, Slug 빈값/중복은 console.warn 후 건너뜀), getPostBySlug(type, slug): Promise<Post|null>, getPostBody(id): Promise<string>(notion-to-md). 요청 직렬화와 목록 결과 재사용(React.cache).",
       "notes": "공개 함수 이름/시그니처 변경 금지. P1-1에서 확정한 조회 방식 사용.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "6c045064-dc8e-45cf-9dda-9e94167c7534"
         }
       ],
       "createdAt": "2026-10-31T05:05:23.714Z",
-      "updatedAt": "2026-10-31T05:05:23.714Z",
+      "updatedAt": "2026-11-01T07:47:52.996Z",
       "relatedFiles": [
         {
           "path": "web/src/lib/notion.ts",
@@ -91,21 +95,23 @@
       ],
       "implementationGuide": "pseudocode: client=new Client({auth}); fetchAll=cache(async()=>{ query data source with filter Status=Published, sort Published At desc, paginate sequentially }); map each page->Post; track seenSlugs, warn and skip empty/duplicate; getPosts(type)=filter fetchAll by type; getPostBySlug=find; getPostBody=n2m.pageToMarkdown then toMarkdownString.parent. Property names exactly as PRD 3장.",
       "verificationCriteria": "임시 스크립트/페이지에서 Published만 최신순으로 출력, Draft 미노출, Slug 오류 시 경고 로그만 남고 크래시 없음, 본문이 Markdown 문자열로 확인됨, 클라이언트 번들에 토큰 없음.",
-      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과."
+      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과.",
+      "summary": "web/src/lib/notion.ts를 구현했다. 맨 위에 server-only를 import하고, 환경변수가 없으면 명확한 에러를 던진다. 조회는 databases.retrieve로 얻은 data source ID에 dataSources.query를 쓴다. 필터는 Status=Published, 정렬은 Published At 내림차순이며 페이지네이션은 순차 처리한다. 결과는 React.cache로 재사용한다. 속성 매핑은 genre/tags를 빈 배열, 선택 필드를 undefined로 둔다. Slug가 비었거나 중복이거나 Type이 잘못된 행은 console.warn 후 건너뛴다. getPosts, getPostBySlug, getPostBody를 제공한다. 임시 route로 실제 Notion에 호출한 결과 Published 3개가 최신순(second-game, first-game, first-devlog)으로 나왔고, 임시 route는 삭제했다. 샘플 페이지에는 블록이 없어(blocks.children.list가 빈 배열) getPostBody는 빈 문자열을 반환했다. 실제 Markdown 변환은 본문이 있는 글로 검증하지 못했다. Draft 미노출과 Slug 경고도 샘플 데이터로 직접 확인하지 못했다. format:check, lint, typecheck, build가 통과했고 .next/static에서 토큰 문자열은 발견되지 않았다.",
+      "completedAt": "2026-11-01T07:47:52.994Z"
     },
     {
       "id": "5b9152dc-da3a-4059-8959-15a4db947b1f",
       "name": "P2-2 공통 UI 컴포넌트와 레이아웃",
       "description": "[Phase 2] web/src/components에 Header(로고, Projects/Devlog 내비), Footer(GitHub/Email), ProjectCard(커버, 제목, 요약, 장르 칩), DevlogItem(날짜+제목+요약), PostBody(react-markdown: 제목, 문단, 리스트, 이미지, 코드, 인용), EmptyState를 PascalCase 파일로 만들고 app/layout.tsx에 Header/Footer를 적용한다. 반응형 기본 틀(모바일 1열, 데스크톱 3열).",
       "notes": "컴포넌트에서 @/lib/notion을 import하지 않는다(데이터는 props).",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "6c045064-dc8e-45cf-9dda-9e94167c7534"
         }
       ],
       "createdAt": "2026-10-31T05:05:23.714Z",
-      "updatedAt": "2026-10-31T05:05:23.714Z",
+      "updatedAt": "2026-11-01T07:50:14.615Z",
       "relatedFiles": [
         {
           "path": "web/src/components",
@@ -120,14 +126,16 @@
       ],
       "implementationGuide": "각 컴포넌트는 Post 타입 props를 받는 서버 컴포넌트. 링크는 next/link, 경로는 /projects/{slug}, /devlog/{slug}. 커버 없으면 placeholder. Tailwind 클래스는 prettier 플러그인으로 정렬. 하드코딩 샘플 props로 임시 확인 후 제거.",
       "verificationCriteria": "하드코딩 props로 모바일/데스크톱 모두 정상 렌더링되고 lint/typecheck 통과.",
-      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과."
+      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과.",
+      "summary": "web/src/components에 Header, Footer, ProjectCard, DevlogItem, PostBody, EmptyState를 PascalCase 파일로 만들고 layout.tsx에 Header/Footer를 적용했다. 컴포넌트는 props만 받고 @/lib/notion을 import하지 않는다. 하드코딩 샘플 props 임시 페이지를 빌드해 정적 HTML에서 확인한 결과, 카드 그리드의 grid-cols-1/md:grid-cols-3, 링크 경로(/projects/s1, /devlog/s4), 커버 없음 placeholder, 빈 상태 문구, 마크다운의 blockquote/pre/img/list가 모두 출력됐다. 임시 페이지는 삭제했다. 브라우저 화면(모바일/데스크톱 시각 확인)은 보지 못했다. 커버 이미지는 next/image 도메인 설정 전이라 img를 쓰고 eslint-disable 주석에 5단계 전환을 명시했다. Footer의 GitHub/Email 값은 placeholder이다. format:check, lint, typecheck, build 통과.",
+      "completedAt": "2026-11-01T07:50:14.612Z"
     },
     {
       "id": "d02d1d8d-d1a7-4f0a-b21c-7f8a77605aeb",
       "name": "P3-1 홈과 프로젝트 라우트",
       "description": "[Phase 3] 먼저 node_modules/next/dist/docs의 App Router, generateStaticParams, generateMetadata 문서를 읽는다. / 홈(소개 문구, 최근 프로젝트 3개, 최근 일지 5개, 전체 보기 링크), /projects 목록(카드 그리드, 빈 상태), /projects/[slug] 상세(커버, 제목, Genre·Engine Version·Published At, Play/Repo 버튼은 값 있을 때만, 본문)를 구현한다. 각 페이지 export const revalidate = 300, 상세는 generateStaticParams와 generateMetadata, 없는 slug는 notFound().",
       "notes": "홈에서 클릭 2회 이내 프로젝트 상세 도달.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "ea776401-ec24-4927-96df-5810db2eb1ed"
@@ -137,7 +145,7 @@
         }
       ],
       "createdAt": "2026-10-31T05:05:23.714Z",
-      "updatedAt": "2026-10-31T05:05:23.714Z",
+      "updatedAt": "2026-11-01T07:57:12.870Z",
       "relatedFiles": [
         {
           "path": "web/src/app/page.tsx",
@@ -157,21 +165,23 @@
       ],
       "implementationGuide": "params는 await. props 타입은 PageProps<\"/projects/[slug]\">. 목록은 getPosts(\"Project\"), 상세는 getPostBySlug + getPostBody를 PostBody에 전달. generateMetadata는 title=post.title, description=post.summary.",
       "verificationCriteria": "샘플 데이터로 세 라우트가 렌더링되고, Draft slug 접근 시 404, 메타데이터 title/description 정상, 본문 블록이 표시된다.",
-      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과."
+      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과.",
+      "summary": "홈, /projects, /projects/[slug]를 구현했다. 홈은 최근 프로젝트 3개와 일지 5개, 전체 보기 링크, 빈 상태를 보여준다. 상세는 generateStaticParams와 generateMetadata를 쓰고, 없는 slug는 notFound()를 호출하며, Play/Repo 버튼은 값이 있을 때만 나온다. 세 페이지 모두 revalidate=300이다. format:check, lint, typecheck, build가 통과했고 build에서 Published 프로젝트 2개만 SSG로 생성됐다(Draft 제외). 프로덕션 서버를 띄워 404와 본문을 직접 확인하지는 못했다(서버 종료 명령이 권한 거부됨).",
+      "completedAt": "2026-11-01T07:57:12.847Z"
     },
     {
       "id": "9b730ce5-0dcf-4a86-8115-cd6adb0fceb1",
       "name": "P3-2 일지 라우트와 404, 빌드 검증",
       "description": "[Phase 3] /devlog 목록(날짜+제목+요약, 빈 상태), /devlog/[slug] 상세(본문), not-found.tsx 404 화면을 구현하고 동일하게 revalidate=300, generateStaticParams, generateMetadata를 적용한다. 전체 라우트를 npm run build로 검증한다.",
       "notes": "P3-1의 패턴을 그대로 재사용한다.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "d02d1d8d-d1a7-4f0a-b21c-7f8a77605aeb"
         }
       ],
       "createdAt": "2026-10-31T05:05:23.714Z",
-      "updatedAt": "2026-10-31T05:05:23.714Z",
+      "updatedAt": "2026-11-01T08:00:27.174Z",
       "relatedFiles": [
         {
           "path": "web/src/app/devlog/page.tsx",
@@ -191,21 +201,23 @@
       ],
       "implementationGuide": "P3-1과 동일 패턴으로 getPosts(\"Devlog\"), getPostBySlug(\"Devlog\", slug). 존재하지 않거나 Draft면 notFound(). 빌드 후 정적 페이지 생성 로그 확인.",
       "verificationCriteria": "모든 라우트가 샘플 데이터로 렌더링, Draft는 목록과 URL 직접 접근 모두 404, npm run format:check, lint, typecheck, build 모두 통과하고 정적 페이지가 생성된다.",
-      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과."
+      "analysisResult": "Notion DB를 CMS로 쓰는 Next.js 16(App Router)+TS+Tailwind v4 포트폴리오/개발일지 사이트를 web/에 구현한다. docs/ROADMAP.md의 Phase 1→2→3→4→5 순서를 반드시 지킨다(4단계는 MVP 배포 후). 규칙은 shrimp-rules.md를 따른다: 모든 npm 명령은 web/에서 실행, Next 코드 작성 전 web/node_modules/next/dist/docs 확인, @/* 별칭, 서버 컴포넌트에서만 @/lib/notion 사용, revalidate=300, 토큰은 .env.local에만, 완료 전 format:check→lint→typecheck→build 통과.",
+      "summary": "/devlog 목록(날짜+제목+요약, 빈 상태)과 /devlog/[slug] 상세(generateStaticParams, generateMetadata, notFound, revalidate=300), 404 화면을 구현했다. format:check, lint, typecheck, build가 모두 통과했고 build에서 프로젝트 2개와 일지 1개가 SSG로 생성됐다. Draft는 build에 포함되지 않았다. 브라우저나 프로덕션 서버에서 직접 확인하지는 못했다.",
+      "completedAt": "2026-11-01T08:00:27.165Z"
     },
     {
       "id": "07a14ce0-76be-47f4-a6eb-6b335b4c3f6c",
       "name": "P5-2 GitHub 푸시와 Vercel 배포",
       "description": "[Phase 5] (사용자 승인 필요) 변경을 커밋·GitHub에 푸시하고 Vercel 프로젝트를 연결(Root Directory=web), 환경변수 NOTION_TOKEN, NOTION_DATABASE_ID 등록 후 배포한다. 배포 URL에서 Notion 데이터가 보이는지, Draft→Published 변경이 5분 이내 반영되는지, 제목 수정이 revalidate 후 반영되는지, 저장소와 클라이언트 번들에 토큰이 없는지, Lighthouse 모바일 90+를 확인한다.",
       "notes": "푸시와 외부 배포는 외부 공개 행위이므로 실행 전 사용자 확인.",
-      "status": "pending",
+      "status": "in_progress",
       "dependencies": [
         {
           "taskId": "a75bdd69-5147-4ad4-8987-ab4a622fa2d1"
         }
       ],
       "createdAt": "2026-10-31T05:05:23.714Z",
-      "updatedAt": "2026-10-31T05:05:23.714Z",
+      "updatedAt": "2026-11-01T08:52:49.966Z",
       "relatedFiles": [
         {
           "path": ".gitignore",
@@ -222,14 +234,14 @@
       "name": "P4-1 이미지 URL 만료 대응",
       "description": "[Phase 4] Notion 파일 URL이 약 1시간 후 만료되는 문제에 대응한다. 빌드/재생성 시 cover와 본문 이미지를 내려받아 정적 자산으로 저장하고 URL을 치환하거나, next/image 최적화 경로를 점검한다. 기존 라우트가 깨지지 않아야 한다.",
       "notes": "ROADMAP 4단계 최우선 항목.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "9b730ce5-0dcf-4a86-8115-cd6adb0fceb1"
         }
       ],
       "createdAt": "2026-10-31T05:08:58.882Z",
-      "updatedAt": "2026-10-31T05:08:58.882Z",
+      "updatedAt": "2026-11-01T08:35:02.565Z",
       "relatedFiles": [
         {
           "path": "web/src/lib/notion.ts",
@@ -244,21 +256,23 @@
       ],
       "implementationGuide": "notion.ts 매핑 단계에서 Notion 파일 URL을 감지해 내려받아 정적 경로로 치환하는 헬퍼를 설계한다. 요청은 직렬화하고 이미 받은 파일은 재사용한다. 저장 위치와 git 추적 여부(생성물은 gitignore 검토)를 결정해 주석에 기록한다.",
       "verificationCriteria": "커버와 본문 이미지가 만료 URL에 의존하지 않고, npm run build가 통과하며 기존 라우트가 정상이다.",
-      "analysisResult": "Notion CMS 기반 Next.js 포트폴리오 사이트(web/). ROADMAP 순서 1→2→3→4→5를 그대로 따른다. Phase 4는 Phase 3 완료 후, Phase 5(최적화·배포) 이전에 수행한다. shrimp-rules.md 규칙 준수."
+      "analysisResult": "Notion CMS 기반 Next.js 포트폴리오 사이트(web/). ROADMAP 순서 1→2→3→4→5를 그대로 따른다. Phase 4는 Phase 3 완료 후, Phase 5(최적화·배포) 이전에 수행한다. shrimp-rules.md 규칙 준수.",
+      "summary": "web/src/lib/images.ts를 추가해 Notion 호스팅 이미지(cover, 본문 Markdown 이미지)를 직렬 큐로 내려받아 public/notion-images/에 저장하고 정적 경로로 치환했다. 실패나 읽기 전용 파일시스템에서는 원본 URL로 폴백하며 이미 저장된 파일은 재사용한다. 생성물은 .gitignore에 추가했다. format, lint, typecheck, build가 모두 통과했다. 샘플 글에 Notion 업로드 이미지가 없어 실제 다운로드 경로는 실데이터로 검증하지 못했고, Vercel ISR 재생성 단계의 읽기 전용 제약은 폴백으로만 대응한다.",
+      "completedAt": "2026-11-01T08:35:02.562Z"
     },
     {
       "id": "81c65111-49b6-4ea4-ac36-62456c617c07",
       "name": "P4-2 On-demand revalidation API",
       "description": "[Phase 4] Notion 버튼/웹훅에서 호출하는 /api/revalidate 라우트를 만든다. 시크릿 검증 후 revalidatePath 또는 revalidateTag로 즉시 재검증한다. 시크릿은 서버 전용 환경변수로 두고 NEXT_PUBLIC_ 접두사는 쓰지 않는다.",
       "notes": "PRD 5.2에서 후속 단계로 분류된 항목이며 사용자 요청에 따라 Phase 4에서 수행한다.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "cd8cd433-dbc8-4268-a3ef-8d6089794145"
         }
       ],
       "createdAt": "2026-10-31T05:08:58.882Z",
-      "updatedAt": "2026-10-31T05:08:58.882Z",
+      "updatedAt": "2026-11-01T08:36:43.810Z",
       "relatedFiles": [
         {
           "path": "web/src/app/api/revalidate/route.ts",
@@ -273,21 +287,23 @@
       ],
       "implementationGuide": "web/node_modules/next/dist/docs의 Route Handler와 revalidation 문서를 먼저 읽는다. POST 요청에서 시크릿 헤더/쿼리를 검증해 불일치 시 401, 일치 시 목록·상세 경로 재검증. .env.example에 변수 이름 추가.",
       "verificationCriteria": "잘못된 시크릿은 401, 올바른 시크릿은 수 초 내 변경이 반영되고 build가 통과한다.",
-      "analysisResult": "Notion CMS 기반 Next.js 포트폴리오 사이트(web/). ROADMAP 순서 1→2→3→4→5를 그대로 따른다. Phase 4는 Phase 3 완료 후, Phase 5(최적화·배포) 이전에 수행한다. shrimp-rules.md 규칙 준수."
+      "analysisResult": "Notion CMS 기반 Next.js 포트폴리오 사이트(web/). ROADMAP 순서 1→2→3→4→5를 그대로 따른다. Phase 4는 Phase 3 완료 후, Phase 5(최적화·배포) 이전에 수행한다. shrimp-rules.md 규칙 준수.",
+      "summary": "POST /api/revalidate 라우트를 추가했다. x-revalidate-secret 헤더를 timingSafeEqual로 검증해 불일치나 누락은 401, 서버에 시크릿이 없으면 500, 일치하면 revalidatePath(\"/\", \"layout\")로 전체를 재검증하고 200을 반환한다. 로컬 dev에서 wrong, missing 401, right 200, GET 405를 확인했고 format, lint, typecheck, build가 통과했다. .env.example과 PRD 2.1, 4.1, ROADMAP을 갱신했다. 실제 Notion 변경이 수 초 내 반영되는지는 배포 환경에서 확인이 필요하다.",
+      "completedAt": "2026-11-01T08:36:43.807Z"
     },
     {
       "id": "a8ce09d4-21cb-4190-847f-6b019628690c",
       "name": "P4-3 다크 모드와 확장 블록",
       "description": "[Phase 4] 시스템 설정을 따르는 다크 모드(Tailwind dark 변형)를 적용하고, 토글·콜아웃·테이블 등 확장 블록 렌더링을 PostBody에 추가한다(react-markdown 플러그인 또는 직접 블록 렌더러 검토).",
       "notes": "기존 기본 블록 렌더링이 깨지지 않아야 한다.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "81c65111-49b6-4ea4-ac36-62456c617c07"
         }
       ],
       "createdAt": "2026-10-31T05:08:58.882Z",
-      "updatedAt": "2026-10-31T05:08:58.882Z",
+      "updatedAt": "2026-11-01T08:38:39.599Z",
       "relatedFiles": [
         {
           "path": "web/src/components/PostBody.tsx",
@@ -302,21 +318,23 @@
       ],
       "implementationGuide": "globals.css에 prefers-color-scheme 기반 색상 토큰을 정의하고 컴포넌트 색상을 점검한다. 확장 블록은 notion-to-md 변환 결과를 확인한 뒤 필요한 remark 플러그인만 추가한다.",
       "verificationCriteria": "다크/라이트 모두 가독성이 유지되고 확장 블록이 표시되며 format:check, lint, typecheck, build가 통과한다.",
-      "analysisResult": "Notion CMS 기반 Next.js 포트폴리오 사이트(web/). ROADMAP 순서 1→2→3→4→5를 그대로 따른다. Phase 4는 Phase 3 완료 후, Phase 5(최적화·배포) 이전에 수행한다. shrimp-rules.md 규칙 준수."
+      "analysisResult": "Notion CMS 기반 Next.js 포트폴리오 사이트(web/). ROADMAP 순서 1→2→3→4→5를 그대로 따른다. Phase 4는 Phase 3 완료 후, Phase 5(최적화·배포) 이전에 수행한다. shrimp-rules.md 규칙 준수.",
+      "summary": "globals.css에 prefers-color-scheme 기반 배경/전경 토큰을 추가하고 전 컴포넌트와 페이지에 dark: 변형을 적용했다. PostBody에는 remark-gfm(표), rehype-raw와 rehype-sanitize(토글 details/summary)를 추가했고 콜아웃은 인용 상자 스타일로 표시한다. 스모크 렌더로 표, 토글, 코드, 이미지와 script 제거를 확인했다. format:check, lint, typecheck, build가 통과했다. 실제 브라우저에서 다크/라이트 육안 확인은 하지 못했다.",
+      "completedAt": "2026-11-01T08:38:39.595Z"
     },
     {
       "id": "87fbcf99-5867-4cea-9220-b8e0b92c3ff1",
       "name": "P4-4 필터 페이지와 RSS 피드",
       "description": "[Phase 4] 태그/장르/Unity 버전 필터와 RSS 피드(/rss.xml)를 추가한다. 기존 라우트 구조를 유지하고 데이터는 getPosts 결과를 재사용한다.",
       "notes": "검색, 다국어, 댓글, WebGL iframe 임베드는 사용자가 요청하면 별도 태스크로 추가한다.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "a8ce09d4-21cb-4190-847f-6b019628690c"
         }
       ],
       "createdAt": "2026-10-31T05:08:58.882Z",
-      "updatedAt": "2026-10-31T05:08:58.882Z",
+      "updatedAt": "2026-11-01T08:45:11.594Z",
       "relatedFiles": [
         {
           "path": "web/src/app/rss.xml/route.ts",
@@ -331,21 +349,23 @@
       ],
       "implementationGuide": "필터는 searchParams 또는 별도 경로 중 PRD 4.1 경로 규칙을 깨지 않는 방식을 선택해 문서에 기록한다. RSS는 Route Handler로 Published 글을 최신순 XML로 출력한다.",
       "verificationCriteria": "필터 결과가 올바르고 RSS가 유효하며 기존 라우트가 깨지지 않고 build가 통과한다.",
-      "analysisResult": "Notion CMS 기반 Next.js 포트폴리오 사이트(web/). ROADMAP 순서 1→2→3→4→5를 그대로 따른다. Phase 4는 Phase 3 완료 후, Phase 5(최적화·배포) 이전에 수행한다. shrimp-rules.md 규칙 준수."
+      "analysisResult": "Notion CMS 기반 Next.js 포트폴리오 사이트(web/). ROADMAP 순서 1→2→3→4→5를 그대로 따른다. Phase 4는 Phase 3 완료 후, Phase 5(최적화·배포) 이전에 수행한다. shrimp-rules.md 규칙 준수.",
+      "summary": "FilterableList 클라이언트 컴포넌트로 장르, 태그, 엔진 버전 필터를 /projects와 /devlog에 추가했다. searchParams를 쓰지 않아 페이지가 정적 ISR로 유지되고 PRD 4.1 경로도 그대로다. /rss.xml 라우트 핸들러는 Published 글을 최신순으로 내보내며 XML 이스케이프와 SITE_URL 처리를 했다. 서버를 띄워 200, XML 유효성, 날짜 순서를 확인했고 format, lint, typecheck, build가 통과했다. 샘플 글에 장르, 태그, 엔진 값이 없어 필터 칩의 실제 동작은 데이터로 검증하지 못했다.",
+      "completedAt": "2026-11-01T08:45:11.589Z"
     },
     {
       "id": "a75bdd69-5147-4ad4-8987-ab4a622fa2d1",
       "name": "P5-1 스타일 다듬기와 SEO 점검",
       "description": "[Phase 5] 여백/타이포/모바일 레이아웃 점검, 빈 값·긴 제목·이미지 없음 예외 UI 확인, next/image 사용과 next.config 이미지 도메인(Notion 파일/S3 호스트) 설정, 기본 SEO(title, description, OG 기본값) 점검. Phase 4 결과(다크 모드, 이미지 정적화, 필터, RSS)까지 포함해 점검한다.",
       "notes": "Phase 4 완료 후 수행한다.",
-      "status": "pending",
+      "status": "completed",
       "dependencies": [
         {
           "taskId": "87fbcf99-5867-4cea-9220-b8e0b92c3ff1"
         }
       ],
       "createdAt": "2026-10-31T05:05:23.714Z",
-      "updatedAt": "2026-10-31T05:09:04.403Z",
+      "updatedAt": "2026-11-01T08:49:54.801Z",
       "relatedFiles": [
         {
           "path": "web/next.config.ts",
@@ -359,7 +379,9 @@
         }
       ],
       "implementationGuide": "cover와 본문 이미지에 next/image 적용 검토(P4-1에서 정적화된 경로 기준), next.config.ts의 images.remotePatterns 필요 시 추가(turbopack.rules 유지), layout.tsx metadata에 기본 OG 설정.",
-      "verificationCriteria": "예외 상황 UI가 깨지지 않고 다크/라이트 모두 정상이며 npm run format:check, lint, typecheck, build 통과."
+      "verificationCriteria": "예외 상황 UI가 깨지지 않고 다크/라이트 모두 정상이며 npm run format:check, lint, typecheck, build 통과.",
+      "summary": "ProjectCard와 프로젝트 상세의 cover를 next/image(fill, sizes)로 전환하고 상세 cover에는 preload를 적용했다. 정적화된 로컬 경로는 최적화하고 원격 URL은 unoptimized로 처리해 호스트 설정 없이 동작한다. layout에 metadataBase, title 템플릿, 기본 OG를, 상세 페이지에 article OG를 추가했다. 긴 제목 break-words와 버튼 flex-wrap으로 예외 UI를 보완했다. 모든 라우트 200과 404, title과 og 태그를 확인했고 format, lint, typecheck, build가 통과했다. 실제 Notion 호스트를 확인하지 못해 remotePatterns는 추가하지 않았고 Lighthouse와 다크/라이트 육안 확인은 못 했다.",
+      "completedAt": "2026-11-01T08:49:54.799Z"
     }
   ]
 }

@@ -1,0 +1,24 @@
+{
+  "name": "notion-cms-project",
+  "version": "1.0.0",
+  "description": "> Unity 6 프로젝트 생성·세팅 자동화 스크립트 모음입니다. 저장소에는 Notion을 CMS로 쓰는 유니티 개발 일지/포트폴리오 사이트의 기획 문서(`docs/PRD.md`)도 함께 있습니다.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PlayfulPigeon/my-notion-cms-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/PlayfulPigeon/my-notion-cms-project/issues"
+  },
+  "homepage": "https://github.com/PlayfulPigeon/my-notion-cms-project#readme"
+}

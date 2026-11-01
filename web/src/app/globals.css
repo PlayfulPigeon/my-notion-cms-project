@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* 다크 모드: 시스템 설정(prefers-color-scheme)을 따른다. Tailwind v4의 dark: 변형도 같은 기준이다. */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}

@@ -33,6 +33,8 @@ Notion 데이터베이스에 개발 일지와 프로젝트를 작성하면, 별�
 |---|---|
 | `NOTION_TOKEN` | Notion Integration 시크릿 |
 | `NOTION_DATABASE_ID` | 콘텐츠 데이터베이스 ID |
+| `REVALIDATE_SECRET` | `/api/revalidate` 호출 검증용 시크릿 (서버 전용, 후속 단계) |
+| `SITE_URL` | RSS 링크 기준 사이트 주소 (선택, 서버 전용. 없으면 Vercel 프로덕션 도메인 사용) |
 
 `.env.local`에만 저장하고 저장소에 커밋하지 않는다. 클라이언트 번들에 노출되는 `NEXT_PUBLIC_` 접두사는 쓰지 않는다.
 
@@ -94,6 +96,8 @@ type Post = {
 | `/devlog` | 일지 목록 | `Type = Devlog` 전체 |
 | `/devlog/[slug]` | 일지 상세 | 본문 |
 | `not-found` | 404 | - |
+| `/api/revalidate` | On-demand 재검증 (POST, 후속 단계) | 헤더 `x-revalidate-secret` 검증 |
+| `/rss.xml` | RSS 피드 (후속 단계) | Published 전체, 최신순 |
 
 ### 4.2 홈
 ```

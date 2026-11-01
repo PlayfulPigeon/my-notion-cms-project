@@ -118,12 +118,12 @@
 **예상 소요 시간:** 기능별 30분~2시간, MVP 배포 후 필요에 따라 선택
 
 ### 작업 (우선순위 순)
-- [ ] 이미지 URL 만료 대응: 빌드 시 이미지를 내려받아 정적 자산으로 저장 (또는 `next/image` 최적화 경로 점검)
-- [ ] On-demand revalidation: Notion 버튼/웹훅 → `/api/revalidate` (시크릿 검증 포함)
-- [ ] 다크 모드 (시스템 설정 연동)
-- [ ] 확장 블록 지원: 토글, 콜아웃, 테이블 (직접 블록 렌더러로 교체 검토)
-- [ ] 태그/장르/Unity 버전 필터 페이지
-- [ ] RSS 피드
+- [x] 이미지 URL 만료 대응: 빌드 시 이미지를 내려받아 정적 자산으로 저장 (또는 `next/image` 최적화 경로 점검)
+- [x] On-demand revalidation: Notion 버튼/웹훅 → `/api/revalidate` (시크릿 검증 포함)
+- [x] 다크 모드 (시스템 설정 연동)
+- [x] 확장 블록 지원: 토글, 콜아웃, 테이블 (직접 블록 렌더러로 교체 검토)
+- [x] 태그/장르/Unity 버전 필터 (목록 페이지 내 클라이언트 필터)
+- [x] RSS 피드
 - [ ] WebGL 빌드 iframe 임베드 (게임 허브)
 - [ ] 검색, 다국어, 댓글
 
@@ -144,10 +144,10 @@
 **예상 소요 시간:** 10~15분 (배포) + 점검 시간
 
 ### 작업
-- [ ] 스타일 다듬기 (여백, 타이포그래피, 모바일 레이아웃 확인)
-- [ ] 빈 값/긴 제목/이미지 없음 등 예외 상황 UI 확인
-- [ ] `next/image` 사용 및 `next.config` 이미지 도메인 설정
-- [ ] 기본 SEO 점검 (title, description, OG 기본값)
+- [x] 스타일 다듬기 (여백, 타이포그래피, 모바일 레이아웃 확인)
+- [x] 빈 값/긴 제목/이미지 없음 등 예외 상황 UI 확인
+- [x] `next/image` 사용 및 `next.config` 이미지 도메인 설정
+- [x] 기본 SEO 점검 (title, description, OG 기본값)
 - [ ] GitHub 푸시 → Vercel 프로젝트 연결 (Root Directory를 `web`으로 지정)
 - [ ] Vercel에 환경변수 `NOTION_TOKEN`, `NOTION_DATABASE_ID` 등록
 - [ ] 배포 후 Lighthouse로 성능/접근성/SEO 확인

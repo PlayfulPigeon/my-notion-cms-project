@@ -21,3 +21,7 @@ dist/
 
 # Logs
 *.log
+
+# Shrimp task manager
+mcp-shrimp-task-manager/
+shrimp_data/

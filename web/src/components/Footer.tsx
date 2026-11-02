@@ -1,6 +1,5 @@
-// TODO: 실제 GitHub / 이메일 주소로 교체한다.
-const GITHUB_URL = "https://github.com/";
-const EMAIL = "hello@example.com";
+const GITHUB_URL = "https://github.com/PlayfulPigeon";
+const EMAIL = "fuesks239@naver.com";
 
 export default function Footer() {
   return (

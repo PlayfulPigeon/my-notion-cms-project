@@ -1,7 +1,7 @@
 # ROADMAP v2: 고도화 단계 (MVP 이후)
 
 > 기준 문서: [PRD.md](./PRD.md) · 이전 로드맵: [roadmaps/ROADMAP_v1.md](./roadmaps/ROADMAP_v1.md) (MVP 구현 이력, 수정하지 않음)
-> 최종 갱신: 2026-11-02
+> 최종 갱신: 2026-11-03
 > 목표: 배포와 측정 기준선을 확보한 뒤, 다크 모드 고도화(필수)와 사용자가 선택한 3개 기능(구문 강조·읽기 편의, 검색, 배포 마무리)을 순서대로 추가한다.
 > 총 예상 시간: 약 **11~15시간** (추정. PRD에 근거 없음. 아래 시간은 모두 추정이며, 대기 시간은 제외한다.)
 > 규모 표기(추정): S = 약 1시간 이내, M = 1~2시간, L = 2시간 초과
@@ -15,8 +15,8 @@
 | 다크 모드 | 시스템 설정만 따름. 토글, 선택 저장, FOUC 방지 없음 | `web/src/app/globals.css`의 `@media (prefers-color-scheme: dark)`, `dark:` 클래스를 쓰는 11개 파일 + `globals.css`. `Header.tsx`에 토글 없음, `layout.tsx`의 `<html>`에 테마 처리 없음 |
 | 코드 구문 강조 | 없음 (코드 블록은 항상 어두운 고정 스타일) | `web/src/components/PostBody.tsx`의 `[&_pre]` 클래스 |
 | 테스트 러너, CI | 없음 | `web/package.json`에 `test` 스크립트 없음, vitest/jest 설정 파일 없음, `.github/` 없음 |
-| GitHub / Vercel | `origin`은 `github.com/PlayfulPigeon/my-notion-cms-project`로 설정, 로컬 `main`은 `origin/main`(d3e90c6)을 추적. 원격의 최신 상태와 Vercel 연결 여부는 **미확인** | `git remote -v`, `git branch -vv` |
-| Footer 링크 | 플레이스홀더(`https://github.com/`, `hello@example.com`) | `web/src/components/Footer.tsx`의 TODO |
+| GitHub / Vercel | `origin`은 `github.com/PlayfulPigeon/my-notion-cms-project`, `main`은 `origin/main`(9e390f9)과 동일. Vercel 배포 완료: `https://my-notion-cms-project.vercel.app` (Root Directory `web`). 빌드 로그에 경고 없음(사용자 보고) | `git remote -v`, 배포 URL 스모크 (2026-11-03) |
+| Footer 링크 | 실제 값으로 교체 완료 (`https://github.com/PlayfulPigeon`, 이메일) | `web/src/components/Footer.tsx` |
 | 스택 | Next 16.4.3, React 19.3.0, Tailwind 4.3.3, `@notionhq/client` 5.28.0, `react-markdown` 10.1.0 + `remark-gfm` + `rehype-raw` + `rehype-sanitize` | `web/package.json`, `node_modules` |
 
 > 주의: 이 저장소의 Next.js는 학습 데이터와 다를 수 있다(`web/AGENTS.md`). 구현 전 `web/node_modules/next/dist/docs/`의 해당 문서를 먼저 읽는다.
@@ -43,33 +43,35 @@
 **변경 대상 파일:** `web/src/components/Footer.tsx`(플레이스홀더 교체). 나머지는 코드 밖 설정(GitHub, Vercel, Notion).
 
 ### 작업
-- [ ] 로컬 사전 점검: `web/`에서 `npm run format:check && npm run lint && npm run typecheck && npm run build` 통과 확인 (S)
-- [ ] `web/src/components/Footer.tsx`의 `GITHUB_URL`, `EMAIL` 플레이스홀더를 실제 값으로 교체 (S). 공개 배포 전 필수
-- [ ] 푸시 범위 결정 후 커밋·푸시: `docs/ROADMAP.md`(신규), `docs/roadmaps/`. `mcp-shrimp-task-manager/`, `shrimp_data/`는 푸시 대상인지 먼저 결정 (S)
-- [ ] Vercel 프로젝트를 만들고 GitHub 저장소 연결: Framework는 Next.js, **Root Directory는 `web`**, Node.js 버전이 Next 16 요구사항(20.9 이상, 추정)을 충족하는지 확인 (S)
-- [ ] Vercel 환경변수 등록: `NOTION_TOKEN`, `NOTION_DATABASE_ID`, `REVALIDATE_SECRET`, (선택) `SITE_URL` (S). `NEXT_PUBLIC_` 접두사 금지, 값은 문서·로그·커밋에 쓰지 않는다
-- [ ] Notion Integration이 콘텐츠 데이터베이스에 Connections로 연결돼 있는지 확인 (S)
-- [ ] 첫 배포를 실행하고 빌드 로그의 `[notion]` 경고(Slug 누락·중복)와 `[images]` 저장 실패 경고를 확인 (S)
-- [ ] 배포 스모크 점검: `/`, `/projects`, `/projects/[slug]`, `/devlog`, `/devlog/[slug]`, 없는 경로(404), `/rss.xml`을 열고 Draft 글 미노출, OG/RSS 링크가 `localhost`가 아닌지 확인 (S)
-- [ ] `/api/revalidate` 스모크: 헤더 없이 호출하면 401, 올바른 `x-revalidate-secret` 헤더로 POST하면 200 (S)
-- [ ] ISR 반영 시험: Notion에서 제목 수정 또는 `Draft` → `Published` 변경 후 5분 이내 반영 확인 (S, 대기 포함)
-- [ ] 이미지 만료 확인: 배포 1시간 뒤에도 커버·본문 이미지가 `/notion-images/...` 정적 경로로 서빙되고 깨지지 않는지 확인. 배포 후 Notion에 새로 올린 이미지는 ISR 재생성 때 어떻게 되는지 확인 (S)
-- [ ] 배포 번들·페이지 소스에서 Notion 토큰 값이 검색되지 않음을 확인 (S)
-- [ ] Lighthouse 측정(모바일, 라이트 모드 기본값): 아래 5개 URL을 각 3회 측정해 중앙값(추정)을 기준선 표에 기록 (M)
+- [x] 로컬 사전 점검: `web/`에서 `npm run format:check && npm run lint && npm run typecheck && npm run build` 통과 확인 (S)
+- [x] `web/src/components/Footer.tsx`의 `GITHUB_URL`, `EMAIL` 플레이스홀더를 실제 값으로 교체 (S). 공개 배포 전 필수
+- [x] 푸시 범위 결정 후 커밋·푸시: `docs/ROADMAP.md`(신규), `docs/roadmaps/`. `mcp-shrimp-task-manager/`, `shrimp_data/`는 푸시 대상인지 먼저 결정 (S)
+- [x] Vercel 프로젝트를 만들고 GitHub 저장소 연결: Framework는 Next.js, **Root Directory는 `web`**, Node.js 버전이 Next 16 요구사항(20.9 이상, 추정)을 충족하는지 확인 (S)
+- [x] Vercel 환경변수 등록: `NOTION_TOKEN`, `NOTION_DATABASE_ID`, `REVALIDATE_SECRET`, (선택) `SITE_URL` (S). `NEXT_PUBLIC_` 접두사 금지, 값은 문서·로그·커밋에 쓰지 않는다
+- [x] Notion Integration이 콘텐츠 데이터베이스에 Connections로 연결돼 있는지 확인 (S)
+- [x] 첫 배포를 실행하고 빌드 로그의 `[notion]` 경고(Slug 누락·중복)와 `[images]` 저장 실패 경고를 확인 (S)
+- [x] 배포 스모크 점검: `/`, `/projects`, `/projects/[slug]`, `/devlog`, `/devlog/[slug]`, 없는 경로(404), `/rss.xml`을 열고 Draft 글 미노출, OG/RSS 링크가 `localhost`가 아닌지 확인 (S) — 확인: 라우트 200/404, 목록 3건, Draft(`draft-first`) 목록·RSS 미노출·상세 404, `localhost` 0건 (2026-11-03)
+- [ ] `/api/revalidate` 스모크: 헤더 없이 호출하면 401, 올바른 `x-revalidate-secret` 헤더로 POST하면 200 (S) — **미완료**: 배포본이 `REVALIDATE_SECRET`을 읽지 못해 헤더 없는 호출이 401이 아닌 500(`Not configured`). 사용자가 환경변수는 Production에 등록했다고 했으나 Redeploy 후 재확인하지 않음. 사용자 결정으로 Phase 0은 완료 처리
+- [x] ISR 반영 시험: Notion에서 제목 수정 또는 `Draft` → `Published` 변경 후 5분 이내 반영 확인 (S, 대기 포함) — 확인: 12:33 제목 수정 → 12:34:12 `<title>` 반영 (2026-11-03)
+- [ ] 이미지 만료 확인: 배포 1시간 뒤에도 커버·본문 이미지가 `/notion-images/...` 정적 경로로 서빙되고 깨지지 않는지 확인. 배포 후 Notion에 새로 올린 이미지는 ISR 재생성 때 어떻게 되는지 확인 (S) — **미수행**: 샘플 글에 이미지가 없어 시험 불가, 사용자 결정으로 건너뜀. 열린 질문 7은 보류
+- [x] 배포 번들·페이지 소스에서 Notion 토큰 값이 검색되지 않음을 확인 (S) — 확인: 페이지 6개와 정적 JS/CSS 10개에서 `NOTION_TOKEN`·`NOTION_DATABASE_ID` 값 0건 (`REVALIDATE_SECRET`은 `.env.local`에 없어 비교 불가)
+- [x] Lighthouse 측정(모바일, 라이트 모드 기본값): 아래 5개 URL을 각 3회 측정해 중앙값(추정)을 기준선 표에 기록 (M)
 
 테스트: 이 Phase에는 새 비즈니스 로직이 없어 단위 테스트 대상이 없다. 위 스모크 점검이 검증을 대신한다. 테스트 러너는 Phase 1에서 도입한다.
 
-### Lighthouse 기준선 (모바일, 라이트 모드) — 측정 후 채운다
+### Lighthouse 기준선 (모바일, 라이트 모드)
 
-측정 일시: ______ · 커밋: ______ · 도구: ______
+측정 일시: 2026-11-03 12:35 (KST) · 커밋: 9e390f9 (`main`, Phase 1~3 미포함) · 도구: Lighthouse 13.6.0 (headless Chrome, 각 URL 3회 중앙값)
 
 | URL | Performance | Accessibility | Best Practices | SEO | LCP | CLS | TBT |
 |---|---|---|---|---|---|---|---|
-| `/` | | | | | | | |
-| `/projects` | | | | | | | |
-| `/projects/[대표 slug]` | | | | | | | |
-| `/devlog` | | | | | | | |
-| `/devlog/[대표 slug]` | | | | | | | |
+| `/` | 93 | 95 | 96 | 90 | 2.63s | 0 | 31ms |
+| `/projects` | 94 | 93 | 96 | 100 | 2.47s | 0 | 32ms |
+| `/projects/first-game` | 94 | 100 | 96 | 100 | 2.48s | 0 | 65ms |
+| `/devlog` | 94 | 98 | 96 | 100 | 2.47s | 0 | 26ms |
+| `/devlog/first-devlog` | 94 | 100 | 96 | 100 | 2.48s | 0 | 58ms |
+
+감점 원인(첫 실행 기준): `color-contrast`(`/`, `/projects`), `heading-order`(`/projects`), `link-text`(`/`, SEO), `errors-in-console`(`/`, `/projects`, Best Practices). 원인 상세는 미조사.
 
 ### 왜 이 순서인가
 - Phase 1~3은 모두 "이전보다 좋아졌는가"를 비교해야 한다. 기준선이 없으면 구문 강조(Phase 2)와 검색(Phase 3)이 성능에 준 영향을 알 수 없다.
@@ -81,12 +83,12 @@
 - `/api/revalidate`는 `curl -X POST`로 헤더 유무에 따른 401/200을 확인한다(시크릿 값은 기록하지 않는다).
 
 ### 완료 기준
-- [ ] 배포 URL에서 Notion 데이터가 보이고 `Draft` 글은 보이지 않는다.
-- [ ] 로컬과 Vercel 빌드에서 `format:check`, `lint`, `typecheck`, `build`가 통과한다.
-- [ ] Notion에서 `Draft` → `Published` 또는 제목 수정이 5분 이내 사이트에 반영된다.
-- [ ] `/api/revalidate`가 헤더 없이 401, 올바른 시크릿으로 200을 반환한다.
-- [ ] Lighthouse 기준선 표(모바일 5개 URL)가 채워져 있다. 점수가 90 미만이어도 기준선 기록이 목적이므로 Phase 0은 완료로 본다. 미달 항목은 해당 Phase에서 다루거나 백로그에 올린다.
-- [ ] Footer에 플레이스홀더가 없고, 번들·페이지 소스에 토큰이 없다.
+- [x] 배포 URL에서 Notion 데이터가 보이고 `Draft` 글은 보이지 않는다.
+- [x] 로컬과 Vercel 빌드에서 `format:check`, `lint`, `typecheck`, `build`가 통과한다.
+- [x] Notion에서 `Draft` → `Published` 또는 제목 수정이 5분 이내 사이트에 반영된다.
+- [ ] `/api/revalidate`가 헤더 없이 401, 올바른 시크릿으로 200을 반환한다. — **미충족** (500 Not configured). 사용자 결정으로 완료 처리
+- [x] Lighthouse 기준선 표(모바일 5개 URL)가 채워져 있다. 점수가 90 미만이어도 기준선 기록이 목적이므로 Phase 0은 완료로 본다. 미달 항목은 해당 Phase에서 다루거나 백로그에 올린다.
+- [x] Footer에 플레이스홀더가 없고, 번들·페이지 소스에 토큰이 없다.
 
 ### 리스크
 - Vercel ISR 재생성 단계는 파일시스템이 읽기 전용이라 `web/src/lib/images.ts`가 원본(만료되는) URL로 폴백한다(코드 주석 기준). 배포 후 새로 올린 이미지는 약 1시간 뒤 깨질 수 있다(추정). 시험 결과에 따라 열린 질문 7로 처리한다.

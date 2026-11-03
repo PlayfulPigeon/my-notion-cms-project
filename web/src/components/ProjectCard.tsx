@@ -19,7 +19,7 @@ export default function ProjectCard({ post }: { post: Post }) {
             className="object-cover"
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-sm text-neutral-400 dark:text-neutral-500">
+          <div className="flex h-full items-center justify-center text-sm text-neutral-600 dark:text-neutral-400">
             No cover
           </div>
         )}

@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import PostBody from "@/components/PostBody";
+import PostNav from "@/components/PostNav";
+import TableOfContents from "@/components/TableOfContents";
+import { getAdjacentPosts } from "@/lib/adjacent-posts";
+import { estimateReadingMinutes } from "@/lib/reading-time";
+import { extractToc } from "@/lib/toc";
 import { getPostBody, getPostBySlug, getPosts } from "@/lib/notion";
 
 export const revalidate = 300;
@@ -38,10 +43,14 @@ export default async function ProjectDetailPage({
   if (!post) notFound();
 
   const body = await getPostBody(post.id);
+  const minutes = estimateReadingMinutes(body);
+  const toc = extractToc(body);
+  const { prev, next } = getAdjacentPosts(await getPosts("Project"), slug);
   const meta = [
     post.genre.join(", "),
     post.engineVersion ? `Unity ${post.engineVersion}` : "",
     post.publishedAt.slice(0, 10),
+    `약 ${minutes}분`,
   ].filter(Boolean);
 
   return (
@@ -89,7 +98,9 @@ export default async function ProjectDetailPage({
           </div>
         )}
       </header>
+      <TableOfContents items={toc} />
       <PostBody markdown={body} />
+      <PostNav basePath="/projects" prev={prev} next={next} />
     </main>
   );
 }

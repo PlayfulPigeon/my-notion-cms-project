@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import ThemeScript from "@/components/ThemeScript";
+import { THEME_COLORS } from "@/lib/theme";
 
 // 사이트 주소: SITE_URL(서버 전용) → Vercel 프로덕션 도메인 → localhost (rss.xml과 같은 규칙)
 function siteUrl(): string {
@@ -32,9 +34,20 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: THEME_COLORS.light },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLORS.dark },
+  ],
+};
+
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className="flex min-h-screen flex-col antialiased">
         <Header />
         <div className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">

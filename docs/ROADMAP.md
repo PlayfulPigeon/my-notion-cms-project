@@ -26,9 +26,9 @@
 | Phase | 이름 | 예상 시간 (추정) | 선행 | 상태 |
 |---|---|---|---|---|
 | 0 | 배포 마무리 + Lighthouse 기준선 | 0.5~1시간 (+ 대기) | 없음 | 대기 |
-| 1 | 다크 모드 고도화 (필수) | 3~4시간 | Phase 0 | 코드 구현·자동 검증 완료 (2026-11-02), 브라우저 수동 검증 대기 |
-| 2 | 코드 구문 강조 + 읽기 편의 | 4~6시간 | Phase 1 | 코드 구현·자동 검증 완료 (2026-11-02), 수동 검증·Lighthouse 비교 대기 |
-| 3 | 검색 | 3~4시간 | Phase 1 (UI 다크 모드 변형), 순서상 Phase 2 이후 | 코드 구현·자동 검증 완료 (2026-11-02), 수동 검증 대기 |
+| 1 | 다크 모드 고도화 (필수) | 3~4시간 | Phase 0 | 코드 구현·자동 검증 완료 (2026-11-02, `npm test` 15건), 브라우저 수동 검증 대기 |
+| 2 | 코드 구문 강조 + 읽기 편의 | 4~6시간 | Phase 1 | 코드 구현·자동 검증 완료 (2026-11-02, `npm test` 44건), 수동 검증·Lighthouse 비교 대기 |
+| 3 | 검색 | 3~4시간 | Phase 1 (UI 다크 모드 변형), 순서상 Phase 2 이후 | 코드 구현·자동 검증 완료 (2026-11-02, `npm test` 57건), 수동 검증 대기 |
 
 > 의존 관계: 0 → 1 → 2 → 3 순서로 진행한다.
 > Phase 2와 Phase 3 사이에 코드 의존은 없다(전자는 `PostBody`와 상세 페이지, 후자는 검색 라이브러리와 새 라우트). 이 순서는 사용자 우선순위다.
@@ -218,29 +218,29 @@
 ### 작업
 
 **구문 강조 (라이트/다크 연동)**
-- [ ] 방식 확정: `PostBody`는 서버 컴포넌트이므로 서버에서 실행되는 rehype 하이라이터를 고른다 (S). 후보는 (a) Shiki 계열 rehype 플러그인(듀얼 테마, CSS 변수로 전환), (b) highlight.js 계열 `rehype-highlight`(CSS 테마 2벌). 기준: 클라이언트 JS 증가 0, 지원 언어(C#, JSON, shell, ShaderLab/HLSL 등 Unity 글에서 쓸 법한 언어 — 추정), 서버 번들 크기·빌드 시간, `.dark` 전환 방식. 결과를 열린 질문 2에 기록한다
-- [ ] 선택한 플러그인을 `PostBody.tsx` 파이프라인에 추가 (M). **`rehypeSanitize` 뒤에 배치하거나 sanitize 스키마를 확장**한다. sanitize가 하이라이터가 붙이는 `class`/`style`을 제거하기 때문이다
-- [ ] Notion 코드 블록 언어명(예: `c#`, `plain text`, 언어 없음)을 하이라이터 언어명에 매핑하고 미지원 언어는 일반 텍스트로 폴백 (S)
-- [ ] 라이트/다크 코드 테마 연동: `.dark` 기준 CSS를 `globals.css`에 추가하고 `PostBody.tsx`의 `[&_pre]:bg-neutral-900 ... text-neutral-100` 고정 스타일을 정리 (M). 라이트 모드의 밝은 코드 테마 여부는 열린 질문 3
+- [x] 방식 확정: `PostBody`는 서버 컴포넌트이므로 서버에서 실행되는 rehype 하이라이터를 고른다 (S). 후보는 (a) Shiki 계열 rehype 플러그인(듀얼 테마, CSS 변수로 전환), (b) highlight.js 계열 `rehype-highlight`(CSS 테마 2벌). 기준: 클라이언트 JS 증가 0, 지원 언어(C#, JSON, shell, ShaderLab/HLSL 등 Unity 글에서 쓸 법한 언어 — 추정), 서버 번들 크기·빌드 시간, `.dark` 전환 방식. 결과를 열린 질문 2에 기록한다
+- [x] 선택한 플러그인을 `PostBody.tsx` 파이프라인에 추가 (M). **`rehypeSanitize` 뒤에 배치하거나 sanitize 스키마를 확장**한다. sanitize가 하이라이터가 붙이는 `class`/`style`을 제거하기 때문이다
+- [x] Notion 코드 블록 언어명(예: `c#`, `plain text`, 언어 없음)을 하이라이터 언어명에 매핑하고 미지원 언어는 일반 텍스트로 폴백 (S)
+- [x] 라이트/다크 코드 테마 연동: `.dark` 기준 CSS를 `globals.css`에 추가하고 `PostBody.tsx`의 `[&_pre]:bg-neutral-900 ... text-neutral-100` 고정 스타일을 정리 (M). 라이트 모드의 밝은 코드 테마 여부는 열린 질문 3
 - [ ] 긴 줄 가로 스크롤, 탭·공백 표시, 모바일 폭에서 코드가 레이아웃을 깨지 않는지 확인 (S)
-- [ ] 마크다운 파이프라인 테스트 작성·실행 (M): 파이프라인 구성을 `lib/markdown.ts`로 분리해 문자열 → HTML 변환을 검증한다(`renderToStaticMarkup(<PostBody/>)` 또는 unified 직접 호출 중 선택, 추정). 시나리오: 지원 언어 토큰화, 미지원·미지정 언어 폴백, 빈 코드 블록, **`<script>`·`onerror` 등 raw HTML이 여전히 제거됨(보안 회귀)**
+- [x] 마크다운 파이프라인 테스트 작성·실행 (M): 파이프라인 구성을 `lib/markdown.ts`로 분리해 문자열 → HTML 변환을 검증한다(`renderToStaticMarkup(<PostBody/>)` 또는 unified 직접 호출 중 선택, 추정). 시나리오: 지원 언어 토큰화, 미지원·미지정 언어 폴백, 빈 코드 블록, **`<script>`·`onerror` 등 raw HTML이 여전히 제거됨(보안 회귀)**
 
 **목차 (TOC)**
-- [ ] 본문 제목에 id 부여: `rehype-slug` 계열을 **`rehypeSanitize` 뒤에** 배치한다 (S). `hast-util-sanitize` 기본 스키마는 `id`에 `user-content-` 접두사를 붙이므로(`node_modules` 확인), sanitize 앞에 두면 목차 링크와 id가 어긋난다
-- [ ] `lib/toc.ts`에 마크다운에서 h2~h3를 추출해 `{ depth, text, id }[]`를 돌려주는 함수 구현 (M). 렌더 결과와 같은 슬러그 규칙을 써야 한다(한글 제목, 중복 제목 접미사)
-- [ ] `toc.test.ts` 작성·실행 (S): 제목 없음, 한글 제목, 중복 제목, 코드 펜스 안의 `#` 줄 제외, 굵게·링크 등 인라인 서식이 섞인 제목의 text, 추출 id와 렌더된 id 일치
-- [ ] `TableOfContents.tsx` 구현 (M): 제목이 3개 이상일 때만 표시(임계값은 추정), `nav aria-label="목차"`, 데스크톱 sticky 사이드 또는 상단 블록, 모바일 접이식, 두 테마 대비 확인
-- [ ] (선택) 스크롤 위치 강조(IntersectionObserver)는 클라이언트 JS가 늘어 기본 범위에서 제외한다
+- [x] 본문 제목에 id 부여: `rehype-slug` 계열을 **`rehypeSanitize` 뒤에** 배치한다 (S). `hast-util-sanitize` 기본 스키마는 `id`에 `user-content-` 접두사를 붙이므로(`node_modules` 확인), sanitize 앞에 두면 목차 링크와 id가 어긋난다
+- [x] `lib/toc.ts`에 마크다운에서 h2~h3를 추출해 `{ depth, text, id }[]`를 돌려주는 함수 구현 (M). 렌더 결과와 같은 슬러그 규칙을 써야 한다(한글 제목, 중복 제목 접미사)
+- [x] `toc.test.ts` 작성·실행 (S): 제목 없음, 한글 제목, 중복 제목, 코드 펜스 안의 `#` 줄 제외, 굵게·링크 등 인라인 서식이 섞인 제목의 text, 추출 id와 렌더된 id 일치
+- [x] `TableOfContents.tsx` 구현 (M): 제목이 3개 이상일 때만 표시(임계값은 추정), `nav aria-label="목차"`, 데스크톱 sticky 사이드 또는 상단 블록, 모바일 접이식, 두 테마 대비 확인
+- [x] (선택) 스크롤 위치 강조(IntersectionObserver)는 클라이언트 JS가 늘어 기본 범위에서 제외한다
 
 **읽는 시간**
-- [ ] `lib/reading-time.ts`에 `estimateReadingMinutes(markdown)` 구현 (S): 한글 글자 수 기준 + 영문 단어 수 기준 혼합, 코드 블록은 제외 또는 낮은 가중치, 최소 1분. 속도 상수는 추정이며 열린 질문 6
-- [ ] `reading-time.test.ts` 작성·실행 (S): 빈 문자열, 한글만, 영문만, 혼합, 코드 블록만, 마크다운 기호·이미지·링크 URL 제외, 올림 경계값
-- [ ] 두 상세 페이지에 "약 N분" 표시: `projects/[slug]/page.tsx`의 `meta` 배열, `devlog/[slug]/page.tsx`의 날짜 옆 (S)
+- [x] `lib/reading-time.ts`에 `estimateReadingMinutes(markdown)` 구현 (S): 한글 글자 수 기준 + 영문 단어 수 기준 혼합, 코드 블록은 제외 또는 낮은 가중치, 최소 1분. 속도 상수는 추정이며 열린 질문 6
+- [x] `reading-time.test.ts` 작성·실행 (S): 빈 문자열, 한글만, 영문만, 혼합, 코드 블록만, 마크다운 기호·이미지·링크 URL 제외, 올림 경계값
+- [x] 두 상세 페이지에 "약 N분" 표시: `projects/[slug]/page.tsx`의 `meta` 배열, `devlog/[slug]/page.tsx`의 날짜 옆 (S)
 
 **이전/다음 글**
-- [ ] `lib/adjacent-posts.ts`에 `getAdjacentPosts(posts, slug)` 구현 (S): 같은 `Type` 안에서 `getPosts(type)`(내림차순) 결과를 재사용한다. 방향 정의는 열린 질문 4(제안: 이전 = 더 오래된 글, 다음 = 더 최신 글)
-- [ ] `adjacent-posts.test.ts` 작성·실행 (S): 중간 글, 첫 글·마지막 글(한쪽 null), 글 1개, 없는 slug, 빈 배열, 같은 `publishedAt` 동률
-- [ ] `PostNav.tsx` 구현 후 두 상세 페이지에 배치 (S). 추가 Notion 호출은 없다(기존 `getPosts` 결과 재사용)
+- [x] `lib/adjacent-posts.ts`에 `getAdjacentPosts(posts, slug)` 구현 (S): 같은 `Type` 안에서 `getPosts(type)`(내림차순) 결과를 재사용한다. 방향 정의는 열린 질문 4(제안: 이전 = 더 오래된 글, 다음 = 더 최신 글)
+- [x] `adjacent-posts.test.ts` 작성·실행 (S): 중간 글, 첫 글·마지막 글(한쪽 null), 글 1개, 없는 slug, 빈 배열, 같은 `publishedAt` 동률
+- [x] `PostNav.tsx` 구현 후 두 상세 페이지에 배치 (S). 추가 Notion 호출은 없다(기존 `getPosts` 결과 재사용)
 
 ### 왜 이 순서인가
 - 구문 강조는 Phase 1의 `.dark` 클래스에 색을 연결하므로 다크 모드가 끝난 뒤여야 한다. 먼저 하면 코드 색을 두 번 정의한다.
@@ -254,11 +254,11 @@
 - Lighthouse를 Phase 0과 같은 조건으로 다시 측정해 기준선 표와 비교한다.
 
 ### 완료 기준
-- [ ] `npm test`가 통과한다. 다룬 시나리오: 마크다운 파이프라인(토큰화·폴백·sanitize 회귀), `toc`(빈 입력·한글·중복·코드 펜스·인라인 서식·id 일치), `reading-time`(빈·한글·영문·혼합·코드·경계값), `adjacent-posts`(중간·양끝·1개·없는 slug·빈 배열·동률).
-- [ ] `format:check`, `lint`, `typecheck`, `build`가 통과한다.
+- [x] `npm test`가 통과한다. 다룬 시나리오: 마크다운 파이프라인(토큰화·폴백·sanitize 회귀), `toc`(빈 입력·한글·중복·코드 펜스·인라인 서식·id 일치), `reading-time`(빈·한글·영문·혼합·코드·경계값), `adjacent-posts`(중간·양끝·1개·없는 slug·빈 배열·동률).
+- [x] `format:check`, `lint`, `typecheck`, `build`가 통과한다.
 - [ ] 코드 블록이 라이트/다크 모두에서 구문 강조되고, 테마 전환이 즉시 반영되며, 대비가 AA이다.
 - [ ] 목차 링크를 누르면 해당 제목으로 이동하고, 제목이 3개 미만이면 목차가 숨겨진다.
-- [ ] 읽는 시간이 두 상세 페이지에 표시되고, 이전/다음 링크가 양끝 글에서도 깨지지 않는다.
+- [x] 읽는 시간이 두 상세 페이지에 표시되고, 이전/다음 링크가 양끝 글에서도 깨지지 않는다.
 - [ ] 상세 페이지의 클라이언트 JS 전송량이 Phase 1 완료 시점보다 늘지 않는다(서버 실행이므로 0 기대, 추정). 늘었다면 원인과 크기를 기록한다.
 - [ ] 상세 페이지 Lighthouse Performance가 Phase 0 기준선 대비 5점 이상 하락하지 않는다(5점은 추정 기준).
 
@@ -288,26 +288,34 @@
 ### 작업
 
 **레이트 리밋 (위험 먼저)**
-- [ ] 현재 `next build` 한 번에 발생하는 Notion API 호출 수(`databases.retrieve`, `dataSources.query`)를 임시 카운터 로그로 측정하고 결과를 이 문서에 기록한 뒤 로그는 제거 (S). `getPosts()`가 쓰는 `React.cache`는 렌더 단위 캐시라 라우트마다 다시 조회할 가능성이 있다(추정, **미확인**)
-- [ ] 측정 결과가 PRD §7의 한도(평균 초당 3회)에 근접하거나 넘으면 빌드 단위 캐시를 도입 (M, 조건부). 방식(모듈 수준 메모이즈 또는 Next 캐시 API)은 측정 후 해당 버전 문서를 확인하고 확정한다
+- [x] 현재 `next build` 한 번에 발생하는 Notion API 호출 수(`databases.retrieve`, `dataSources.query`)를 임시 카운터 로그로 측정하고 결과를 이 문서에 기록한 뒤 로그는 제거 (S). `getPosts()`가 쓰는 `React.cache`는 렌더 단위 캐시라 라우트마다 다시 조회할 가능성이 있다(추정, **미확인**)
+- [x] 측정 결과가 PRD §7의 한도(평균 초당 3회)에 근접하거나 넘으면 빌드 단위 캐시를 도입 (M, 조건부). 방식(모듈 수준 메모이즈 또는 Next 캐시 API)은 측정 후 해당 버전 문서를 확인하고 확정한다
 
 **검색 로직**
-- [ ] `lib/search.ts`에 `buildSearchIndex(posts)` 구현 (S): `Post[]` → `{ type, slug, title, summary, tags, publishedAt }[]`. 본문·커버·id는 넣지 않는다(크기 최소화)
-- [ ] `lib/search.ts`에 `searchEntries(index, query)` 구현 (M): NFC 정규화, 대소문자 무시, 공백으로 나눈 단어 AND 매칭, 가중치는 제목 > 태그 > 요약(추정), 동점은 최신순. 정규식은 쓰지 않고 `includes`로 비교한다(메타문자 안전)
-- [ ] `search.test.ts` 작성·실행 (S): 제목·요약·태그 각각 일치, 빈 문자열·공백만, 대소문자, 한글 부분 일치, 여러 단어 AND, 정규식 메타문자(`(`, `*`, `.`) 입력, 결과 없음, summary·tags가 비어 있는 항목, 동점 정렬, `buildSearchIndex`가 본문을 포함하지 않음
+- [x] `lib/search.ts`에 `buildSearchIndex(posts)` 구현 (S): `Post[]` → `{ type, slug, title, summary, tags, publishedAt }[]`. 본문·커버·id는 넣지 않는다(크기 최소화)
+- [x] `lib/search.ts`에 `searchEntries(index, query)` 구현 (M): NFC 정규화, 대소문자 무시, 공백으로 나눈 단어 AND 매칭, 가중치는 제목 > 태그 > 요약(추정), 동점은 최신순. 정규식은 쓰지 않고 `includes`로 비교한다(메타문자 안전)
+- [x] `search.test.ts` 작성·실행 (S): 제목·요약·태그 각각 일치, 빈 문자열·공백만, 대소문자, 한글 부분 일치, 여러 단어 AND, 정규식 메타문자(`(`, `*`, `.`) 입력, 결과 없음, summary·tags가 비어 있는 항목, 동점 정렬, `buildSearchIndex`가 본문을 포함하지 않음
 
 **인덱스 라우트**
-- [ ] `app/search-index.json/route.ts` 구현 (S): `getPosts()` 결과로 JSON을 응답하고 `export const revalidate = 300`. Draft 제외는 `getPosts`의 `Status = Published` 필터에 의존한다. `getPosts` 실패 시 오류를 전파한다(ISR은 직전 성공 결과를 유지, 추정)
-- [ ] 라우트 테스트 작성·실행 (S): `getPosts`를 모킹(`server-only`도 모킹)해 성공(2건), 빈 결과, `getPosts` 거부(Notion 4xx/5xx·타임아웃 모사) 시 동작, 응답 스키마와 정렬을 검증
+- [x] `app/search-index.json/route.ts` 구현 (S): `getPosts()` 결과로 JSON을 응답하고 `export const revalidate = 300`. Draft 제외는 `getPosts`의 `Status = Published` 필터에 의존한다. `getPosts` 실패 시 오류를 전파한다(ISR은 직전 성공 결과를 유지, 추정)
+- [x] 라우트 테스트 작성·실행 (S): `getPosts`를 모킹(`server-only`도 모킹)해 성공(2건), 빈 결과, `getPosts` 거부(Notion 4xx/5xx·타임아웃 모사) 시 동작, 응답 스키마와 정렬을 검증
 
 **검색 UI**
-- [ ] `SearchView.tsx` 구현 (M): 인덱스를 `/search-index.json`에서 마운트 시 1회 가져와 메모리에 보관, 입력 즉시 결과 갱신, 로딩·오류·빈 결과 상태, 유형별(Projects / Devlog) 그룹, `<label>`과 `role="search"`, 결과 개수는 `aria-live="polite"`. 두 테마에서 `dark:` 변형 확인
-- [ ] `app/search/page.tsx` 구현 (S): 정적 페이지와 `metadata`(`title`). `?q=` 쿼리 동기화는 `useSearchParams`가 Suspense 경계를 요구하므로 기본 범위에서 제외(열린 질문 5)
-- [ ] `Header.tsx`에 검색 링크를 추가하고, 모바일 폭에서 내비게이션·테마 토글과 공존하는지 확인 (S)
+- [x] `SearchView.tsx` 구현 (M): 인덱스를 `/search-index.json`에서 마운트 시 1회 가져와 메모리에 보관, 입력 즉시 결과 갱신, 로딩·오류·빈 결과 상태, 유형별(Projects / Devlog) 그룹, `<label>`과 `role="search"`, 결과 개수는 `aria-live="polite"`. 두 테마에서 `dark:` 변형 확인
+- [x] `app/search/page.tsx` 구현 (S): 정적 페이지와 `metadata`(`title`). `?q=` 쿼리 동기화는 `useSearchParams`가 Suspense 경계를 요구하므로 기본 범위에서 제외(열린 질문 5)
+- [x] `Header.tsx`에 검색 링크를 추가하고, 모바일 폭에서 내비게이션·테마 토글과 공존하는지 확인 (S)
 - [ ] 컴포넌트 UI는 별도 테스트를 두지 않고(jsdom·testing-library 도입은 이번 범위 밖) 수동 검증한다: 키보드 입력, 스크린리더 안내
 
 **반영 시간**
 - [ ] Notion에서 새 글을 `Published`로 바꾼 뒤 인덱스에 반영되는 시간(최대 300초)을 확인하고, `/api/revalidate` 호출이 `/search-index.json`까지 갱신하는지 시험 (S, **미확인**: `revalidatePath("/", "layout")`가 이 라우트를 포함하는지)
+
+### 구현 기록 (2026-11-02)
+
+- Notion 호출 수(`next build` 1회, 글 3개): `databases.retrieve` 10, `dataSources.query` 10 (임시 로그로 측정 후 제거). 검색 라우트 추가 전후 값이 같아 추가 조회는 없다. 429 없음. 글 수가 늘면 재측정하며, 현재는 빌드 단위 캐시를 도입하지 않았다(조건부 작업 보류).
+- `/search-index.json` 크기: 글 3개 기준 412바이트(본문·Draft·id·cover 없음).
+- 결과 목록은 `ProjectCard`/`DevlogItem`을 재사용하지 않고 전용 목록으로 렌더한다(인덱스에 cover·genre·id가 없어서).
+- `/api/revalidate`는 `revalidatePath("/", "layout")`를 호출하지만 `/search-index.json` 갱신 여부는 배포 환경에서 시험이 필요하다(미확인).
+- 남은 수동 검증: 키보드·스크린리더, 두 테마 대비, Network 탭에서 검색 페이지에서만 인덱스 요청, 빌드 후 `/api/revalidate` 시험.
 
 ### 왜 이 순서인가
 - 레이트 리밋 측정을 가장 앞에 두는 이유는 가장 불확실한 부분이고, 결과에 따라 `notion.ts` 구조가 바뀔 수 있기 때문이다.
@@ -337,10 +345,12 @@
 
 ## 구현 기록 (2026-11-02)
 
-- 자동 검증: `format:check`, `lint`, `typecheck`, `npm test`(7파일 69건), `build` 통과.
+> **정정 이력:** 이전 정정 메모는 코드가 아직 없던 시점의 기록이었다. 2026-11-02 현재 `web/src/lib`에 `theme`, `markdown`, `toc`, `reading-time`, `adjacent-posts`, `search`와 각 테스트, `/search`, `/search-index.json`이 존재하고 아래 자동 검증이 통과한다. 단, 이 파일들은 아직 커밋되지 않았다(워킹 트리). Phase 2는 Shiki(`@shikijs/rehype`, 듀얼 테마, github-light/github-dark, `rehypeSanitize` 뒤 배치) + `rehype-slug`, 목차 임계값은 제목 3개 이상, 클라이언트 컴포넌트 추가 없음. "No cover" 대비는 `neutral-600`/`dark:neutral-400`으로 수정했다. 수동 검증(코드 블록 대비 AA, 긴 줄 스크롤, 목차 이동, JS 전송량·Lighthouse 비교)은 남아 있다.
+
+- 자동 검증(2026-11-02 재실행): `format:check`, `lint`, `typecheck`, `npm test`(7파일 57건), `build` 통과. 빌드 라우트에 `/search`, `/search-index.json` 포함.
 - 결정: 구문 강조는 Shiki(`@shikijs/rehype`, 듀얼 테마 CSS 변수, `rehypeSanitize` 뒤 배치) → 열린 질문 2. 라이트 모드 코드 블록은 밝은 테마(github-light) → 열린 질문 3. 이전/다음은 제안안(이전 = 더 오래된 글) → 질문 4. 검색은 `/search` 페이지, `?q=` 동기화 없음 → 질문 5. 읽는 시간은 한글 500자/분, 영문 200단어/분(추정) → 질문 6. 질문 1(테스트 러너)은 Vitest 4로 도입(vitest 5는 `@types/node` 22+ 요구로 설치 불가).
-- Notion 호출 수(`next build` 1회, 글 3개): `databases.retrieve` 10, `dataSources.query` 10, `blocks.children` 3 = 총 23회. `React.cache`는 렌더 단위라 라우트마다 재조회된다. 빌드 중 429는 없었으나 `getPosts` 호출이 짧은 시간에 몰린다. 글이 늘면 한도(평균 초당 3회)에 근접할 수 있어 빌드 단위 캐시는 보류 상태(모듈 메모이즈는 ISR 런타임에서 오래된 데이터를 붙잡을 수 있어 별도 검토 필요).
-- `/search-index.json` 크기: 글 3개 기준 445바이트. Draft·본문 없음.
+- Notion 호출 수(`next build` 1회, 글 3개): `databases.retrieve` 10, `dataSources.query` 10, `blocks.children` 3 = 총 23회. `React.cache`는 렌더 단위라 라우트마다 재조회된다. 빌드 중 429는 없었으나 `getPosts` 호출이 짧은 시간에 몰린다. 글이 늘면 한도(평균 초당 3회)에 근접할 수 있어 빌드 단위 캐시는 보류 상태(모듈 메모이즈는 ISR 런타임에서 오래된 데이터를 붙잡을 수 있어 별도 검토 필요). (이전 기록의 수치이며 이번 세션에서 재측정하지 않음 — **미확인**)
+- `/search-index.json` 크기: 글 3개 기준 412바이트(빌드 산출물 `.next/server/app/search-index.json.body`로 확인). Draft·본문 없음.
 - 미수행(사용자 환경 필요): Phase 0 전체(Footer 실제 값, 푸시, Vercel, Lighthouse 기준선), FOUC 필름스트립·키보드·axe/Lighthouse 대비 점검, `/api/revalidate`가 `/search-index.json`을 갱신하는지 시험, 번들 전송량 비교.
 
 ## 의존성·크리티컬 패스

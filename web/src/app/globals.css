@@ -1,20 +1,41 @@
 @import "tailwindcss";
 
-/* 다크 모드: 시스템 설정(prefers-color-scheme)을 따른다. Tailwind v4의 dark: 변형도 같은 기준이다. */
+/* 클래스 기반 다크 모드: <html class="dark">일 때 dark: 변형이 적용된다.
+   클래스는 <head> 인라인 스크립트(ThemeScript)와 ThemeToggle이 관리한다. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
+}
+
+/* 전역 포커스 링: 두 테마 모두 배경 대비 3:1 이상 (blue-700 / blue-400) */
+:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+.dark :focus-visible {
+  outline-color: #60a5fa;
+}
+
+/* 구문 강조: Shiki 듀얼 테마 변수를 .dark 기준으로 전환한다. */
+.shiki span {
+  color: var(--shiki-light);
+}
+
+.dark .shiki span {
+  color: var(--shiki-dark);
 }
